@@ -1,12 +1,42 @@
+import fs from "node:fs";
 import assert from "node:assert";
-import test, { describe } from "node:test";
+import test, { after, before, describe } from "node:test";
 
-import { Storage } from "@google-cloud/storage";
+import { MockStorage as Storage } from "mock-gcs";
 
 import GCSStore from "./index.js";
 
 describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Store", () => {
 	const storage = new Storage();
+
+	const commonSessionDetailsAndOptions = {
+		session: "dummy-session-id",
+		path: "./sample.zip",
+	};
+
+	const commonValidInitParams = {
+		gcsClient: storage,
+		bucketName: "dummy-bucket",
+		basePathInBucket: "folder-inside-bucket/",
+	};
+
+	const commonValidStore = new GCSStore(commonValidInitParams);
+
+	before(() => {
+		if (!fs.existsSync(commonSessionDetailsAndOptions.path))
+			fs.writeFileSync(
+				commonSessionDetailsAndOptions.session + ".zip",
+				"dummy-file-contents"
+			);
+	});
+
+	after(() => {
+		if (fs.existsSync(commonSessionDetailsAndOptions.path))
+			fs.unlinkSync(commonSessionDetailsAndOptions.path);
+
+		if (fs.existsSync(commonSessionDetailsAndOptions.session + ".zip"))
+			fs.unlinkSync(commonSessionDetailsAndOptions.session + ".zip");
+	});
 
 	test("error is thrown on incorrect or empty instantiation parameters [sanity]", () => {
 		try {
@@ -70,43 +100,52 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 	});
 
 	test("instantiation of store class happens correctly [sanity]", () => {
-		const initParams = {
-			gcsClient: storage,
-			bucketName: "dummy-bucket",
-			basePathInBucket: "folder-inside-bucket/",
-		};
-
-		const store = new GCSStore(initParams);
-
-		assert.equal(store.basePathInBucket, initParams.basePathInBucket);
-		assert.equal(store.bucketName, initParams.bucketName);
-		assert.equal(store.client, initParams.gcsClient);
+		assert.equal(
+			commonValidStore.basePathInBucket,
+			commonValidInitParams.basePathInBucket
+		);
+		assert.equal(commonValidStore.bucketName, commonValidInitParams.bucketName);
+		assert.equal(commonValidStore.client, commonValidInitParams.gcsClient);
 
 		// Params not passed should not be present
-		assert.equal(Object.keys(store.bucketClientOptions).length, 0);
-		assert.equal(store.localBaseDirectory, "");
+		assert.equal(Object.keys(commonValidStore.bucketClientOptions).length, 0);
+		assert.equal(commonValidStore.localBaseDirectory, "");
 	});
 
 	test("all required methods in the store class are present [sanity]", () => {
-		const initParams = {
-			gcsClient: storage,
-			bucketName: "dummy-bucket",
-			basePathInBucket: "folder-inside-bucket/",
-		};
-
-		const store = new GCSStore(initParams);
-
-		assert.equal(typeof store.sessionExists, "function");
-		assert.equal(typeof store.save, "function");
-		assert.equal(typeof store.extract, "function");
-		assert.equal(typeof store.delete, "function");
+		assert.equal(typeof commonValidStore.sessionExists, "function");
+		assert.equal(typeof commonValidStore.save, "function");
+		assert.equal(typeof commonValidStore.extract, "function");
+		assert.equal(typeof commonValidStore.delete, "function");
 	});
 
-	test("sessionExists method works as expected", () => {});
+	test("sessionExists and save methods work as expected", async () => {
+		assert.equal(
+			await commonValidStore.sessionExists(commonSessionDetailsAndOptions),
+			false
+		);
 
-	test("save method works as expected", () => {});
+		await commonValidStore.save(commonSessionDetailsAndOptions);
 
-	test("extract method works as expected", () => {});
+		assert.equal(
+			await commonValidStore.sessionExists(commonSessionDetailsAndOptions),
+			true
+		);
+	});
 
-	test("delete method works as expected", () => {});
+	test("extract method works as expected", async () => {
+		await commonValidStore.extract(commonSessionDetailsAndOptions);
+
+		// File should be created locally at a specified path from the uploaded zip file
+		assert.equal(fs.existsSync(commonSessionDetailsAndOptions.path), true);
+		assert.equal(
+			fs.readFileSync(commonSessionDetailsAndOptions.path, "utf-8"),
+			"dummy-file-contents"
+		);
+	});
+
+	test("delete method works as expected", async () => {
+		await commonValidStore.delete(commonSessionDetailsAndOptions);
+		assert.equal(await commonValidStore.sessionExists(), false);
+	});
 });
