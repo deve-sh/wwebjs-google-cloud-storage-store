@@ -4,7 +4,7 @@
 	"description": "A RemoteAuth bridge for Whatsapp-Web.js to work with Google Cloud Storage for sessions",
 	"main": "index.js",
 	"scripts": {
-		"test": "node tests"
+		"test": "node tests.mjs"
 	},
 	"keywords": [
 		"Whatsapp",

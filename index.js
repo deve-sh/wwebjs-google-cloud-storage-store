@@ -11,7 +11,7 @@ class GCSStore {
 	/**
 	 * @type {string}
 	 */
-	basePath;
+	basePathInBucket;
 
 	/**
 	 * @type {string}
@@ -35,7 +35,7 @@ class GCSStore {
 		 * 	  gcsClient: import('@google-cloud/storage').Storage;
 		 * 	  bucketName: string;
 		 * 	  bucketClientOptions?: import('@google-cloud/storage').BucketOptions;
-		 * 	  basePath?: string;
+		 * 	  basePathInBucket?: string;
 		 * 	  localBaseDirectory?: string;
 		 * }}
 		 */
@@ -43,22 +43,22 @@ class GCSStore {
 	) {
 		if (!initParams)
 			throw new Error(
-				"A valid set of instantiation parameters are required: { gcsClient, bucketName, basePath?, bucketClientOptions? }"
+				"A valid set of instantiation parameters are required: { gcsClient, bucketName, basePathInBucket?, bucketClientOptions? }"
 			);
 
 		if (!initParams.gcsClient)
 			throw new Error(
-				"A valid Google Cloud Storage client is required in initParams: { gcsClient, bucketName, basePath?, bucketClientOptions? }"
+				"A valid Google Cloud Storage client is required in initParams: { gcsClient, bucketName, basePathInBucket?, bucketClientOptions? }"
 			);
 
 		if (!initParams.bucketName || typeof initParams.bucketName !== "string")
 			throw new Error(
-				"A valid Google Cloud Storage bucket name is required in initParams: { gcsClient, bucketName, basePath?, bucketClientOptions? }"
+				"A valid Google Cloud Storage bucket name is required in initParams: { gcsClient, bucketName, basePathInBucket?, bucketClientOptions? }"
 			);
 
 		if (
-			initParams.basePath &&
-			(initParams.basePath.length === 1 || !initParams.basePath.endsWith("/"))
+			initParams.basePathInBucket &&
+			(initParams.basePathInBucket.length === 1 || !initParams.basePathInBucket.endsWith("/"))
 		)
 			throw new Error(
 				"A valid Google Cloud Storage bucket base path name is required in the format: {pathFragments...}/"
@@ -71,12 +71,12 @@ class GCSStore {
 			typeof initParams.bucketClientOptions === "object"
 				? initParams.bucketClientOptions
 				: {};
-		this.basePath = initParams.basePath || "";
+		this.basePathInBucket = initParams.basePathInBucket || "";
 		this.localBaseDirectory = initParams.localBaseDirectory || "";
 	}
 
 	#getSessionZipPathInRemoteBucket(options) {
-		return (this.basePath || "") + options.session + "/session.zip";
+		return (this.basePathInBucket || "") + options.session + "/session.zip";
 	}
 
 	#getSessionZipFileRefInRemoteBucket(options) {
@@ -146,3 +146,5 @@ class GCSStore {
 }
 
 module.exports = GCSStore;
+module.exports.GCSStore = GCSStore;
+module.exports.default = GCSStore;
