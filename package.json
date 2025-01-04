@@ -1,5 +1,5 @@
 {
-	"name": "wwebjs-google-cloud-storage",
+	"name": "wwebjs-google-cloud-storage-remoteauth-store",
 	"version": "0.0.1",
 	"description": "A RemoteAuth bridge for Whatsapp-Web.js to work with Google Cloud Storage for sessions",
 	"main": "index.js",

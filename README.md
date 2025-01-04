@@ -7,7 +7,7 @@ Check out the repository and source code for Whatsapp-Web.js [here](https://gith
 ### Installation and Usage
 
 ```bash
-npm i wwebjs-google-cloud-storage
+npm i wwebjs-google-cloud-storage-remoteauth-store
 ```
 
 Use it in your project:
@@ -15,6 +15,10 @@ Use it in your project:
 ```js
 const { Client: WhatsAppWebClient, RemoteAuth } = require('whatsapp-web.js');
 const { Storage } = require('@google-cloud/storage');
+const { GCSStore } = require('wwebjs-google-cloud-storage-remoteauth-store');
+// Or const GCSStore = require('wwebjs-google-cloud-storage-remoteauth-store');
+// Or import GCSStore from 'wwebjs-google-cloud-storage-remoteauth-store'
+// Or import { GCSStore } from 'wwebjs-google-cloud-storage-remoteauth-store'
 
 const cloudStorageClient = new Storage();
 
