@@ -1,0 +1,1 @@
+export const GCSStore: typeof import("./index");

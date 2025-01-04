@@ -1,0 +1,23 @@
+{
+	"name": "wwebjs-google-cloud-storage",
+	"version": "0.0.1",
+	"description": "A RemoteAuth bridge for Whatsapp-Web.js to work with Google Cloud Storage for sessions",
+	"main": "index.js",
+	"scripts": {
+		"test": "node tests"
+	},
+	"keywords": [
+		"Whatsapp",
+		"Whatsapp Web",
+		"Google Cloud Storage",
+		"Whatsapp-Web.js Session Management"
+	],
+	"author": "Devesh Kumar <contact@devesh.tech>",
+	"license": "MIT",
+	"devDependencies": {
+		"@google-cloud/storage": "^7.14.0"
+	},
+  "peerDependencies": {
+    "@google-cloud/storage": "^5.7.0"
+  }
+}
