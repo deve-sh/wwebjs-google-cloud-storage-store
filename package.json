@@ -16,9 +16,10 @@
 	"author": "Devesh Kumar <contact@devesh.tech>",
 	"license": "MIT",
 	"devDependencies": {
-		"@google-cloud/storage": "^7.14.0"
+		"@google-cloud/storage": "^7.14.0",
+		"whatsapp-web.js": "^1.26.0"
 	},
-  "peerDependencies": {
-    "@google-cloud/storage": "^5.7.0"
-  }
+	"peerDependencies": {
+		"@google-cloud/storage": "^5.7.0"
+	}
 }

@@ -58,7 +58,8 @@ class GCSStore {
 
 		if (
 			initParams.basePathInBucket &&
-			(initParams.basePathInBucket.length === 1 || !initParams.basePathInBucket.endsWith("/"))
+			(initParams.basePathInBucket.length === 1 ||
+				!initParams.basePathInBucket.endsWith("/"))
 		)
 			throw new Error(
 				"A valid Google Cloud Storage bucket base path name is required in the format: {pathFragments...}/"
@@ -75,11 +76,21 @@ class GCSStore {
 		this.localBaseDirectory = initParams.localBaseDirectory || "";
 	}
 
-	#getSessionZipPathInRemoteBucket(options) {
-		return (this.basePathInBucket || "") + options.session + "/session.zip";
+	#getSessionZipPathInRemoteBucket(
+		/** @type {Partial<Parameters<import('whatsapp-web.js').Store['extract']>[0]>} */
+		options
+	) {
+		return (
+			(this.basePathInBucket || "") + (options.session || "") + "/session.zip"
+		);
 	}
 
-	#getSessionZipFileRefInRemoteBucket(options) {
+	#getSessionZipFileRefInRemoteBucket(
+		/**
+		 * @type {Partial<Parameters<import('whatsapp-web.js').Store['extract']>[0]>}
+		 */
+		options
+	) {
 		const bucketClient = this.client.bucket(this.bucketName);
 		const fileRef = bucketClient.file(
 			this.#getSessionZipPathInRemoteBucket(options)
@@ -88,12 +99,22 @@ class GCSStore {
 		return fileRef;
 	}
 
-	async sessionExists(options) {
+	async sessionExists(
+		/**
+		 * @type {Parameters<import('whatsapp-web.js').Store['sessionExists']>[0]}
+		 */
+		options
+	) {
 		const fileRef = this.#getSessionZipFileRefInRemoteBucket(options);
 		return await fileRef.exists();
 	}
 
-	async save(options) {
+	async save(
+		/**
+		 * @type {Parameters<import('whatsapp-web.js').Store['save']>[0]}
+		 */
+		options
+	) {
 		return new Promise((resolve, reject) => {
 			const localFilePath = path.resolve(
 				this.localBaseDirectory,
@@ -123,7 +144,12 @@ class GCSStore {
 		});
 	}
 
-	async extract(options) {
+	async extract(
+		/**
+		 * @type {Parameters<import('whatsapp-web.js').Store['extract']>[0]}
+		 */
+		options
+	) {
 		return new Promise((resolve, reject) => {
 			const fileRefInRemoteBucket =
 				this.#getSessionZipFileRefInRemoteBucket(options);
@@ -138,7 +164,12 @@ class GCSStore {
 		});
 	}
 
-	async delete(options) {
+	async delete(
+		/**
+		 * @type {Parameters<import('whatsapp-web.js').Store['delete']>[0]}
+		 */
+		options
+	) {
 		return await this.#getSessionZipFileRefInRemoteBucket(options).delete({
 			ignoreNotFound: true,
 		});

@@ -85,8 +85,6 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 		// Params not passed should not be present
 		assert.equal(Object.keys(store.bucketClientOptions).length, 0);
 		assert.equal(store.localBaseDirectory, "");
-
-		// Test existence of methods
 	});
 
 	test("all required methods in the store class are present [sanity]", () => {
