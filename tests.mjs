@@ -15,7 +15,7 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 	};
 
 	const commonValidInitParams = {
-		gcsClient: storage,
+		client: storage,
 		bucketName: "dummy-bucket",
 		basePathInBucket: "folder-inside-bucket/",
 	};
@@ -51,7 +51,7 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 
 		try {
 			// Invalid Instantiation Parameters
-			new GCSStore({ gcsClient: null });
+			new GCSStore({ client: null });
 		} catch (error) {
 			assert.match(
 				error.message,
@@ -60,7 +60,7 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 		}
 
 		try {
-			new GCSStore({ gcsClient: storage });
+			new GCSStore({ client: storage });
 		} catch (error) {
 			assert.match(
 				error.message,
@@ -69,12 +69,12 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 		}
 
 		// Valid instantiation
-		new GCSStore({ gcsClient: storage, bucketName: "dummy-bucket" });
+		new GCSStore({ client: storage, bucketName: "dummy-bucket" });
 		assert.equal(1, 1);
 
 		try {
 			new GCSStore({
-				gcsClient: storage,
+				client: storage,
 				bucketName: "dummy-bucket",
 				basePathInBucket: "folder-inside-bucket",
 			});
@@ -87,7 +87,7 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 
 		try {
 			new GCSStore({
-				gcsClient: storage,
+				client: storage,
 				bucketName: "dummy-bucket",
 				basePathInBucket: "/",
 			});
@@ -105,7 +105,7 @@ describe("Tests for WhatsApp-Web.js Google Cloud Storage RemoteAuth Strategy Sto
 			commonValidInitParams.basePathInBucket
 		);
 		assert.equal(commonValidStore.bucketName, commonValidInitParams.bucketName);
-		assert.equal(commonValidStore.client, commonValidInitParams.gcsClient);
+		assert.equal(commonValidStore.client, commonValidInitParams.client);
 
 		// Params not passed should not be present
 		assert.equal(Object.keys(commonValidStore.bucketClientOptions).length, 0);

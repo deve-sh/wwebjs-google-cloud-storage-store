@@ -32,7 +32,7 @@ class GCSStore {
 	constructor(
 		/**
 		 * @type {{
-		 * 	  gcsClient: import('@google-cloud/storage').Storage;
+		 * 	  client: import('@google-cloud/storage').Storage;
 		 * 	  bucketName: string;
 		 * 	  bucketClientOptions?: import('@google-cloud/storage').BucketOptions;
 		 * 	  basePathInBucket?: string;
@@ -43,17 +43,17 @@ class GCSStore {
 	) {
 		if (!initParams)
 			throw new Error(
-				"A valid set of instantiation parameters are required: { gcsClient, bucketName, basePathInBucket?, bucketClientOptions? }"
+				"A valid set of instantiation parameters are required: { client, bucketName, basePathInBucket?, bucketClientOptions? }"
 			);
 
-		if (!initParams.gcsClient)
+		if (!initParams.client)
 			throw new Error(
-				"A valid Google Cloud Storage client is required in initParams: { gcsClient, bucketName, basePathInBucket?, bucketClientOptions? }"
+				"A valid Google Cloud Storage client is required in initParams: { client, bucketName, basePathInBucket?, bucketClientOptions? }"
 			);
 
 		if (!initParams.bucketName || typeof initParams.bucketName !== "string")
 			throw new Error(
-				"A valid Google Cloud Storage bucket name is required in initParams: { gcsClient, bucketName, basePathInBucket?, bucketClientOptions? }"
+				"A valid Google Cloud Storage bucket name is required in initParams: { client, bucketName, basePathInBucket?, bucketClientOptions? }"
 			);
 
 		if (
@@ -65,7 +65,7 @@ class GCSStore {
 				"A valid Google Cloud Storage bucket base path name is required in the format: {pathFragments...}/"
 			);
 
-		this.client = initParams.gcsClient;
+		this.client = initParams.client;
 		this.bucketName = initParams.bucketName || "";
 		this.bucketClientOptions =
 			initParams.bucketClientOptions &&
