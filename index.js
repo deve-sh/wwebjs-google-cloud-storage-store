@@ -105,8 +105,13 @@ class GCSStore {
 		 */
 		options
 	) {
-		const fileRef = this.#getSessionZipFileRefInRemoteBucket(options);
-		return await fileRef.exists();
+		try {
+			const fileRef = this.#getSessionZipFileRefInRemoteBucket(options);
+			const [exists] = await fileRef.exists();
+			return exists;
+		} catch {
+			return false;
+		}
 	}
 
 	async save(
